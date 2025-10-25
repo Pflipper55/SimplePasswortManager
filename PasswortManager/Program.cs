@@ -1,31 +1,69 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿List<PasswortRegistry> passwords = new List<PasswortRegistry>();
+
+// See https://aka.ms/new-console-template for more information
 Console.WriteLine($"Dies ist ein einfacher Passwort-Manager");
 Console.WriteLine("Wie heißt du?");
 string benutzerName = Console.ReadLine();
 Console.WriteLine($"Willkommen, {benutzerName}!");
 
-// 
-Console.WriteLine("Welche Aktion willst du durchführen, bitte gebe die entsprechende Zahl ein um fortzufahren");
-string userInput = Console.ReadLine();
-int userChoice = int.Parse(userInput);
+int userChoice = GetUserMenuInput();
 
-if (userChoice == 1)
+while (userChoice != 5)
 {
-    Console.WriteLine("Sie haben die 1 ausgewählt");
+    if (userChoice == 1)
+    {
+        Console.WriteLine("Sie haben die Aktion 'Passwort erstellen' ausgewählt");
+        Console.WriteLine("Geben sie den Namen ein, unter dem Sie das Passwort nachher wieder finden:");
+        string name = Console.ReadLine();
+        Console.WriteLine("Geben sie den Benutzernamen ein:");
+        string userName = Console.ReadLine();
+        Console.WriteLine("Geben sie das Passwort ein:");
+        string password = Console.ReadLine();
+
+        passwords.Add(new PasswortRegistry(name, userName, password));
+    }
+    else if (userChoice == 2)
+    {
+        Console.WriteLine("Sie haben die Aktion 'Passwort verändern' ausgewählt");
+    }
+    else if (userChoice == 3)
+    {
+        Console.WriteLine("Sie haben die Aktion 'Passwort löschen' ausgewählt");
+    }
+    else if (userChoice == 4)
+    {
+        Console.WriteLine("Sie haben die Aktion 'Passwort suchen' ausgewählt");
+    }
+    else if (userChoice == 5)
+    {
+        Console.WriteLine("Sie haben die Aktion 'Programm beenden' ausgewählt");
+    }
+    else
+    {
+        Console.WriteLine("Das war eine ungültige Auswahl!");
+    }
+
+    userChoice = GetUserMenuInput();
 }
-else if (userChoice == 2)
+
+// (einfacher) Aufbau eines Methodenkopfes: Typ des Rückgabewert (z.B string oder int), Methodenname, evtl. Parameter
+int GetUserMenuInput()
 {
-    Console.WriteLine("Sie haben die 2 ausgewählt");
-}
-else
-{
-    Console.WriteLine("Das war eine ungültige Auswahl!");
+    Console.WriteLine("Welche Aktion willst du durchführen, bitte gebe die entsprechende Zahl ein um fortzufahren");
+    Console.WriteLine("1 - Passwort erstellen");
+    Console.WriteLine("2 - Passwort verändern");
+    Console.WriteLine("3 - Passwort löschen");
+    Console.WriteLine("4 - Passwort suchen");
+    Console.WriteLine("5 - Programm beenden");
+    string userInput = Console.ReadLine();
+    userChoice = int.Parse(userInput);
+    return userChoice;
 }
 
 /*
  * Hausaufgabe:
  * Ändern Sie das Programm so ab, dass
- * 1) Das uns das Programm sagt, welche Zahlen für welche Aktionen stehen 
- *    Dabei soll es uns folgende Aktionen vorschlagen: 1 - Passwort erstellen, 2 - Passwort verändern, 3 - Passwort löschen, 4 - Passwort suchen, 5 - Programm beenden
- * 2) Das Programm uns sagt welche Aktion wir ausgewählt haben. D.h wenn der User die 1 auswählt, soll das Programm ausgeben: "Sie haben die Aktion 'Passwort erstellen' ausgewählt"
+ * 1) Lagern sie die Anweisungen für das Erstellen eines Passwortes in eine eigene Methode um. 
+ *    Name: Passwort erstellen. Die Methode soll dabei nichts zurückliefern (Rückgabewert void , kein return statement)
+ * 2) Erstellen sie für die anderen Aktionen auch Methoden. Hierbei soll erstmall nur ein Methodenkopf definiert werden. Rufen sie die Methode an der richtigen Stelle auf.
 */
