@@ -19,7 +19,8 @@ while (userChoice != 5)
     }
     else if (userChoice == 2)
     {
-        UpdatePassword();
+        Console.WriteLine("Welches Passwort wollen sie verändern?");
+        UpdatePassword(Console.ReadLine());
     }
     else if (userChoice == 3)
     {
@@ -27,7 +28,8 @@ while (userChoice != 5)
     }
     else if (userChoice == 4)
     {
-        SearchPassword();
+        Console.WriteLine("Welches Passwort suchen sie?");
+        SearchPassword(Console.ReadLine());
     }
     else if (userChoice == 5)
     {
@@ -69,18 +71,45 @@ void CreatePassword()
     SavePasswordsInJson(passwords);
 }
 
-void UpdatePassword()
+void UpdatePassword(string searchTerm)
 {
     Console.WriteLine("Sie haben die Aktion 'Passwort verändern' ausgewählt");
+    Console.WriteLine("Geben Sie das neue Passwort ein");
+    string newPassword = Console.ReadLine();
+    int index = passwords.FindIndex(password => password.name == searchTerm);
+    passwords[index] = new PasswortRegistry(passwords[index].name, passwords[index].userName, newPassword);
+    SavePasswordsInJson(passwords);
 }
 
-void SearchPassword()
+void SearchPassword(string searchTerm)
 {
     Console.WriteLine("Sie haben die Aktion 'Passwort suchen' ausgewählt");
     passwords = LoadPasswordsFromJson();
     foreach (var password in passwords)
     {
-        Console.WriteLine(password);
+        if (password.name.ToLower().Contains(searchTerm.ToLower()))
+        {
+            Console.WriteLine("=======================================");
+            Console.WriteLine($"Name: {password.name}");
+            Console.WriteLine($"Benutzername: {password.userName}");
+            Console.WriteLine($"Name: {password.passwort}");
+            Console.WriteLine("=======================================");
+            return;
+        }
+    }
+    Console.WriteLine("Passwort nicht gefunden :c");
+    Console.WriteLine("Alle ausgeben [j|n] ?");
+    string input = Console.ReadLine();
+    if (input == "j")
+    {
+        foreach (var password in passwords)
+        {
+            Console.WriteLine("=======================================");
+            Console.WriteLine($"Name: {password.name}");
+            Console.WriteLine($"Benutzername: {password.userName}");
+            Console.WriteLine($"Name: {password.passwort}");
+            Console.WriteLine("======================================="); 
+        }
     }
 }
 
@@ -112,5 +141,5 @@ List<PasswortRegistry> LoadPasswordsFromJson()
 /*
  * Hausaufgabe:
  * Ändern Sie das Programm so ab, dass
- * 1) sie die Einträge in der JSON ließt und zählt. Am Ende soll eine Konsolenausgabe die Anzahl der Passwörter geben.
+ * 1) sie ein bestimmtes Passwort löschen können. Nutzen sie dabei die DeletePassword Methode und nutzen sie die Hilfsmethode RemoveAt von der Liste (passwords.RemoveAt(index))
 */
