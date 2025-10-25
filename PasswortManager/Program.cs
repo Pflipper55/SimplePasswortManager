@@ -1,4 +1,7 @@
-﻿List<PasswortRegistry> passwords = new List<PasswortRegistry>();
+﻿using System.Text.Json;
+
+List<PasswortRegistry> passwords = new List<PasswortRegistry>();
+string filePathJson = "passwoerter.json";
 
 // See https://aka.ms/new-console-template for more information
 Console.WriteLine($"Dies ist ein einfacher Passwort-Manager");
@@ -12,31 +15,23 @@ while (userChoice != 5)
 {
     if (userChoice == 1)
     {
-        Console.WriteLine("Sie haben die Aktion 'Passwort erstellen' ausgewählt");
-        Console.WriteLine("Geben sie den Namen ein, unter dem Sie das Passwort nachher wieder finden:");
-        string name = Console.ReadLine();
-        Console.WriteLine("Geben sie den Benutzernamen ein:");
-        string userName = Console.ReadLine();
-        Console.WriteLine("Geben sie das Passwort ein:");
-        string password = Console.ReadLine();
-
-        passwords.Add(new PasswortRegistry(name, userName, password));
+        CreatePassword();
     }
     else if (userChoice == 2)
     {
-        Console.WriteLine("Sie haben die Aktion 'Passwort verändern' ausgewählt");
+        UpdatePassword();
     }
     else if (userChoice == 3)
     {
-        Console.WriteLine("Sie haben die Aktion 'Passwort löschen' ausgewählt");
+        DeletePassword();
     }
     else if (userChoice == 4)
     {
-        Console.WriteLine("Sie haben die Aktion 'Passwort suchen' ausgewählt");
+        SearchPassword();
     }
     else if (userChoice == 5)
     {
-        Console.WriteLine("Sie haben die Aktion 'Programm beenden' ausgewählt");
+        ExitProgramm();
     }
     else
     {
@@ -60,10 +55,62 @@ int GetUserMenuInput()
     return userChoice;
 }
 
+void CreatePassword()
+{
+    Console.WriteLine("Sie haben die Aktion 'Passwort erstellen' ausgewählt");
+    Console.WriteLine("Geben sie den Namen ein, unter dem Sie das Passwort nachher wieder finden:");
+    string name = Console.ReadLine();
+    Console.WriteLine("Geben sie den Benutzernamen ein:");
+    string userName = Console.ReadLine();
+    Console.WriteLine("Geben sie das Passwort ein:");
+    string password = Console.ReadLine();
+
+    passwords.Add(new PasswortRegistry(name, userName, password));
+    SavePasswordsInJson(passwords);
+}
+
+void UpdatePassword()
+{
+    Console.WriteLine("Sie haben die Aktion 'Passwort verändern' ausgewählt");
+}
+
+void SearchPassword()
+{
+    Console.WriteLine("Sie haben die Aktion 'Passwort suchen' ausgewählt");
+    passwords = LoadPasswordsFromJson();
+    foreach (var password in passwords)
+    {
+        Console.WriteLine(password);
+    }
+}
+
+void DeletePassword()
+{
+    Console.WriteLine("Sie haben die Aktion 'Passwort löschen' ausgewählt");
+}
+
+void ExitProgramm()
+{
+    Console.WriteLine("Sie haben die Aktion 'Programm beenden' ausgewählt");
+    Environment.Exit(0);
+}
+
+void SavePasswordsInJson(List<PasswortRegistry> listWithPasswords)
+{
+    string jsonString = JsonSerializer.Serialize<List<PasswortRegistry>>(listWithPasswords);
+    File.WriteAllText(filePathJson, jsonString);
+}
+
+List<PasswortRegistry> LoadPasswordsFromJson()
+{
+    string jsonString = File.ReadAllText(filePathJson);
+    List<PasswortRegistry> passwordsFromJson = JsonSerializer.Deserialize<List<PasswortRegistry>>(jsonString);
+    return passwordsFromJson;
+}
+
+
 /*
  * Hausaufgabe:
  * Ändern Sie das Programm so ab, dass
- * 1) Lagern sie die Anweisungen für das Erstellen eines Passwortes in eine eigene Methode um. 
- *    Name: Passwort erstellen. Die Methode soll dabei nichts zurückliefern (Rückgabewert void , kein return statement)
- * 2) Erstellen sie für die anderen Aktionen auch Methoden. Hierbei soll erstmall nur ein Methodenkopf definiert werden. Rufen sie die Methode an der richtigen Stelle auf.
+ * 1) sie die Einträge in der JSON ließt und zählt. Am Ende soll eine Konsolenausgabe die Anzahl der Passwörter geben.
 */
