@@ -11,7 +11,7 @@ Console.WriteLine($"Willkommen, {benutzerName}!");
 
 int userChoice = GetUserMenuInput();
 
-while (userChoice != 5)
+while (userChoice != 6)
 {
     if (userChoice == 1)
     {
@@ -31,7 +31,12 @@ while (userChoice != 5)
         Console.WriteLine("Welches Passwort suchen sie?");
         SearchPassword(Console.ReadLine());
     }
-    else if (userChoice == 5)
+    else if(userChoice == 5)
+    {
+        string password = GeneratePassword();
+        Console.WriteLine($"Generiertes Passwort: {password}");
+    }
+    else if (userChoice == 6)
     {
         ExitProgramm();
     }
@@ -51,7 +56,8 @@ int GetUserMenuInput()
     Console.WriteLine("2 - Passwort verändern");
     Console.WriteLine("3 - Passwort löschen");
     Console.WriteLine("4 - Passwort suchen");
-    Console.WriteLine("5 - Programm beenden");
+    Console.WriteLine("5 - Passwort generieren");
+    Console.WriteLine("6 - Programm beenden");
     string userInput = Console.ReadLine();
     userChoice = int.Parse(userInput);
     return userChoice;
@@ -137,9 +143,35 @@ List<PasswortRegistry> LoadPasswordsFromJson()
     return passwordsFromJson;
 }
 
+string GeneratePassword()
+{
+    string letters = "abcdefghiklmnopqrstuvwxyz";
+    string password = string.Empty;
+    Console.WriteLine("Sollen Großbuchstaben inkludiert werden [j|n]?");
+    if (Console.ReadLine() == "j")
+    {
+        letters += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    }
 
-/*
- * Hausaufgabe:
- * Ändern Sie das Programm so ab, dass
- * 1) sie ein bestimmtes Passwort löschen können. Nutzen sie dabei die DeletePassword Methode und nutzen sie die Hilfsmethode RemoveAt von der Liste (passwords.RemoveAt(index))
-*/
+    Console.WriteLine("Sollen Sonderzeichen inkludiert werden");
+    if (Console.ReadLine() == "j")
+    {
+        letters += "!'§$%&/()=?-.,_#*<>;";
+    }
+
+    Console.WriteLine("Sollen Zahlen inkludiert werden?");
+    if (Console.ReadLine() == "j")
+    {
+        letters += "1234567890";
+    }
+
+    Console.WriteLine("Wie lang soll das Passwort werden?");
+    int length = int.Parse(Console.ReadLine());
+
+    for (int i = 0; i < length; i++)
+    {
+        int random = new Random().Next(0, letters.Length);
+        password += letters[random];
+    }
+    return password;
+}
